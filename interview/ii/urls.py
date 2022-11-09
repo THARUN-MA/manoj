@@ -8,4 +8,5 @@ urlpatterns=[
     url('signup/',views.signup,name='signup'),
     url('logout/',views.logout,name='logout'),
     url('dashboard/',views.dashboard,name='dashboard'),
+    url('viewanalysis/(?P<value>\w+)$',views.viewanalysis,name='viewanalysis'),
 ]

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from ii.models import userdetail
+from ii.models import userdetail,userfiles,counter
 # Create your views here.
 def index(request):
     request.session['usr']=""
@@ -29,8 +29,28 @@ def logout(request):
     request.session['usr']=""
     return render(request,'index.html')
 
+
 def dashboard(request):
     if request.session['usr']:
-        return render(request,'dashboard.html')
+        context={}
+        iidd=counter.objects.all()
+        context['data']=userfiles.objects.all()
+        if request.method=="POST":
+            if request.FILES['myfile']:
+                userfiles(aid=iidd[0].aid,title=request.FILES['myfile'].name,files=request.FILES['myfile']).save()
+                counter.objects.filter(aid=iidd[0].aid).update(aid=str(int(iidd[0].aid)+1))
+
+        # iidd=counter.objects.all()
+        # counter.objects.filter(aid=iidd[0].aid).update(aid=str(int(iidd[0].aid)+1))
+
+
+
+        return render(request,'dashboard.html',context)
+    else:
+        return redirect('ii:login')
+
+def viewanalysis(request,value=None):
+    if request.session['usr']:
+        return render(request,'viewanalysis.html')
     else:
         return redirect('ii:login')
